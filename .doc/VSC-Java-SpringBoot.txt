@@ -1,0 +1,67 @@
+0) Requirements
+
+JDK?
+    javac --version
+    https://dev.java/download/
+
+JAVA_HOME?
+
+[Maven?
+    mvn --version
+]
+
+MySQL?
+    MySQL Community Server
+    remember [PASSWORD]
+    MySQL Workbench (check connection to server)
+
+VSC?
+- Extension Pack for Java
+- Spring Boot Extension Pack
+
+1) Set Up
+
+Create Database [DB_NAME]
+
+Github https://github.com/zhaw-iwi/statefulconversation_java.git
+
+src/main/ressources/
+    copy both properties templates, rename them (remove .template)
+    application.properties: set [DB_NAME] in connection url
+    application.properties: set [PASSWORD]
+    openai.properties: set openai api key
+
+Done?
+    If you can build it
+    e.g., Maven:statefulconversation:Plugins:spring-boot:run
+
+2) Bot
+
+Run an existing unit test in src/test/java/.../bots/
+    e.g., FlightBookingBot
+
+OR create your own unit test in src/test/java/.../bots/
+    Unit test creates Agent and saves it to Database
+    Run your own unit test
+
+(Obtain UUID of agent from Database:
+    SELECT
+        LOWER(
+            CONCAT(
+                SUBSTR(HEX(id), 1, 8), '-',
+                SUBSTR(HEX(id), 9, 4), '-',
+                SUBSTR(HEX(id), 13, 4), '-',
+                SUBSTR(HEX(id), 17, 4), '-',
+                SUBSTR(HEX(id), 21)
+            )
+        )
+    FROM statefulconversation.agent;
+)
+
+Run backend
+
+Find UUID of agent:
+    http://localhost:8080/all
+
+Access bot using:
+    http://localhost:8080/?[UUID]
