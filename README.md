@@ -1,5 +1,5 @@
 # Social Behaviour Regulation using Language Models
-*This is a fork of [PROMISE](https://github.com/zhaw-iwi/statefulconversation_java), an application development **framework** that supports the development of complex **language-based interactions** using **state machine modelling** concepts.*
+*This is a fork of [PROMISE](https://github.com/zhaw-iwi/promise), an application development **framework** that supports the development of complex **language-based interactions** using **state machine modelling** concepts.*
 
 This fork extends the original framework with the means to use language models for social behaviour regulation. This extension tailors the agent's behaviour to the user, making interactions more personalized and dynamic.
 
@@ -11,7 +11,9 @@ This fork extends the original framework with the means to use language models f
 - [ADHS Coaching](#behaviour-regulation-for-adhs-coaching)
     - [Example Interaction](#example-interaction-2)
 - [Prototyping](#prototyping)
-    - [Testing](#testing)
+    - [Deploy and Test Conversational Interactions](#deploy-and-test-conversational-interactions)
+    - [Create your own Conversational Interaction](#create-your-own-conversational-interaction)
+    - [Create your own Behaviour Regulation](#create-your-own-behaviour-regulation)
     - [Detections](#detections)
     - [Behaviour Modulation](#behaviour-modulation)
     - [Mapping from Detections to Behaviour Modulations](#mapping-from-detections-to-behaviour-modulations)
@@ -115,9 +117,24 @@ In the following figure, the issues detected and the resulting coaching behaviou
 
 ## Prototyping
 
-*A complete introduction to the [PROMISE](https://github.com/zhaw-iwi/statefulconversation_java) framework including a guide on how to get framework applications up and running is required to understand and use this framework extension.*
+*A complete introduction to the [PROMISE](https://github.com/zhaw-iwi/promise) framework including a guide on how to get framework applications up and running is required to understand and use this framework extension.*
 
-A **State** regulating its social behaviour according to the Zurich Model is created as follows.
+### Deploy and Test Conversational Interactions
+
+Use the documentation of [PROMISE](https://github.com/zhaw-iwi/promise) to deploy existing conversational interactions. As part of this repository, you will find the following examples.
+- **ZurichModelAssistant** The basic behaviour regulated according to the Zurich Model.
+- **ZurichModelTheoryOfMind** The basic behaviour regulated according to the Zurich Model where the detections reflect the user motivations, and the behaviours aim to accommodate the user motivations.
+- **BigFiveRegulation** The basic behaviour regulated based on Big Five personality traits detections mapped to the Zurich Model behaviours set to comfort the specific user traits.
+- **ADHS Coaching** A coaching behaviour that is regulated based on user issues detected.
+- **BaselineUnregulated** A basic behaviour that is unregulated, reflecting the default language model behaviour.
+
+All of them share the exact same basic behaviour (state prompt and transition). All of them can be found at src/test/java/ch.zhaw.statefulconversation.bots.
+
+You may use ChatGPT to simulate a user with a specific conversational behaviour. Compare the resulting detections and behaviours between different user behaviours. Compare the regulated behaviour to the baseline interaction.
+
+### Create your own Conversational Interaction
+
+Using the existing interaction implementations listed above as a template, create your own interaction. A **State** regulating its social behaviour according to detections created as follows.
 
 ```
 RegulationSystem regulationSystem = new ZurichModelImpl(0, 0, 0);
@@ -132,22 +149,26 @@ State state = new RegulatedState(
     List.of(transition)
 );
 ```
-where the **RegulationSystem** interface implementation **ZurichModelImpl** encapsulates all the functionality according to the Zurich Model.
+where the **RegulationSystem** interface implementations such as **ZurichModelImpl**, **BigFiveImpl** or **CoachingImpl** encapsulate all the regulation functionality (detection, mapping, behaviour).
 
 The behaviour regulation can be exchanged by adapting the first line of code above as exemplified with the following adaptation for the use of the Big Five regulation. 
 ```
 RegulationSystem regulationSystem = new BigFiveImpl();
 ```
 
-### Testing
+Once you created your own conversational interaction, deploy and test it as described above. 
 
-To test different approaches to behaviour regulation and obtain a comparison, use the following conversational agents implemented in test/java/ch.zhaw.statefulconversation.bots.
-- **BaselineUnregulated** A basic behaviour that is unregulated, reflecting the default language model behaviour.
-- **ZurichModelAssistant** The basic behaviour regulated according to the Zurich Model.
-- **ZurichModelTheoryOfMind** The basic behaviour regulated according to the Zurich Model where the detections reflect the user motivations, and the behaviours aim to accommodate the user motivations.
-- **BigFiveRegulation** The basic behaviour regulated based on Big Five personality traits detections mapped to the Zurich Model behaviours set to comfort the specific user traits.
+### Create your own Behaviour Regulation
 
-All framework extensions related to social behaviour regulation are located in the package ch.zhaw.statefulconversation.socialbehaviourregulation.
+Using the existing behaviour regulation implementations as a template, create your own behaviour regulation. All framework extensions related to social behaviour regulation are located at src/main/java/ch.zhaw.statefulconversation.socialbehaviourregulation.
+
+To create your own behaviour regulation, you will need to design and implement the following classes.
+- **YourRegulationImpl extends RegulationSystem** where the Detectors and Actuators are specified and initialised, and where the **process(Utterances): String** method specifies the detection and behaviour logics.
+- **PromptsProvider** where you specify all the prompts for detections and behaviours. Implement this as an abstract class if you want to experiment with different variants of these prompts.
+- **APromptsProvider**, **BPromptsProvider**, ... if you left the **PromptsProvider** abstract and want to have variants of prompts to experiment with.
+- **BehaviourImpl implements Behaviour** where the complete behaviour regulation prompt extension is assembled. Note that this is just for convenience and it is not an @Entity.
+
+Once you created these classes, create your own conversational interaction as described above.
 
 ### Detections
 
