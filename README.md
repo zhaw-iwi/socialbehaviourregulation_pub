@@ -79,6 +79,38 @@ In the following figure, the traits detected and the resulting behavioural modul
  <img alt="Assistant regulating its social behaviour to comfort Big Five traits" src=".doc/BigFiveRegulation.png">
 </picture>
 
+## Behaviour Regulation for ADHS Coaching
+
+To explore novel applications, we implemented **CoachingImpl** which detects the user's issues and regulates its behaviour such as to coach the user. The conversation with the user is continuously analysed for information about the following issues.
+- Focus Level
+- Emotional Stability
+- Restlessness Level
+- Time Management
+- Social Interaction
+
+These detections are then mapped to the behaviours (aggression, supplication, exploration, avoidance and affiliation) of the Zurich Model described above as follows.
+- Empathetic Encouragement = (- Emotional Stability)
+- Grounding Mentoring = Focus Level x Restlessness
+- Productivity Reinforcement = Focus Level x Time Management
+- Reflection and Self-Regulation Faciliation = Emotional Stability x Time Management
+- Active Listening = (- Social Interaction)
+
+As a result, coaching behaviour is computed as a function of the user's issues. The result of these computations determines if and which coaching behaviours the agent performs.
+
+### Example Interaction
+
+We used GPT to act as a fictitious user that has the following issues:
+- Focus Level: -1 (currently distracted and having difficulty focusing)
+- Emotional Stability: -1 (emotionally distressed, feeling frustrated with their current situation)
+- Restlessness Level: 1 (physically calm at the moment, not experiencing restlessness)
+- Time Management: -1 (struggling with time management, feeling behind on tasks)
+- Social Interaction: 0 (no recent social interactions mentioned or relevant)
+
+In the following figure, the issues detected and the resulting coaching behaviours are shown in the two columns on the right.
+<picture>
+ <img alt="ADHS coaching adapting the coaching behaviours to issues detected" src=".doc/ADHSCoaching.png">
+</picture>
+
 ## Prototyping
 
 *A complete introduction to the [PROMISE](https://github.com/zhaw-iwi/statefulconversation_java) framework including a guide on how to get framework applications up and running is required to understand and use this framework extension.*

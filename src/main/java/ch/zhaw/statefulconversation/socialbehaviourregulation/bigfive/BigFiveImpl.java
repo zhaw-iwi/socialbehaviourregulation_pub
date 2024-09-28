@@ -46,32 +46,32 @@ public class BigFiveImpl extends RegulationSystem {
 
         public BigFiveImpl(boolean marker) {
 
-                this.openness = new Detector(DefaultPromptsProvider.instance().detectOpenness());
-                this.conscientiousness = new Detector(DefaultPromptsProvider.instance().detectConscientiousness());
-                this.extraversion = new Detector(DefaultPromptsProvider.instance().detectExtraversion());
-                this.agreeableness = new Detector(DefaultPromptsProvider.instance().detectAgreeableness());
-                this.neuroticism = new Detector(DefaultPromptsProvider.instance().detectNeuroticism());
+                this.openness = new Detector(PromptsProvider.instance().detectOpenness());
+                this.conscientiousness = new Detector(PromptsProvider.instance().detectConscientiousness());
+                this.extraversion = new Detector(PromptsProvider.instance().detectExtraversion());
+                this.agreeableness = new Detector(PromptsProvider.instance().detectAgreeableness());
+                this.neuroticism = new Detector(PromptsProvider.instance().detectNeuroticism());
 
                 this.aggression = new Actuator(
-                                DefaultPromptsProvider.instance().behaveAggression(),
-                                DefaultPromptsProvider.instance().behaveAggressionNot(),
-                                DefaultPromptsProvider.instance().behaveAggressionNeutral());
+                                PromptsProvider.instance().behaveAggression(),
+                                PromptsProvider.instance().behaveAggressionNot(),
+                                PromptsProvider.instance().behaveAggressionNeutral());
                 this.supplication = new Actuator(
-                                DefaultPromptsProvider.instance().behaveSupplication(),
-                                DefaultPromptsProvider.instance().behaveSupplicationNot(),
-                                DefaultPromptsProvider.instance().behaveSupplicationNeutral());
+                                PromptsProvider.instance().behaveSupplication(),
+                                PromptsProvider.instance().behaveSupplicationNot(),
+                                PromptsProvider.instance().behaveSupplicationNeutral());
                 this.exploration = new Actuator(
-                                DefaultPromptsProvider.instance().behaveExploration(),
-                                DefaultPromptsProvider.instance().behaveExplorationNot(),
-                                DefaultPromptsProvider.instance().behaveExplorationNeutral());
+                                PromptsProvider.instance().behaveExploration(),
+                                PromptsProvider.instance().behaveExplorationNot(),
+                                PromptsProvider.instance().behaveExplorationNeutral());
                 this.avoidance = new Actuator(
-                                DefaultPromptsProvider.instance().behaveAvoidance(),
-                                DefaultPromptsProvider.instance().behaveAvoidanceNot(),
-                                DefaultPromptsProvider.instance().behaveAvoidanceNeutral());
+                                PromptsProvider.instance().behaveAvoidance(),
+                                PromptsProvider.instance().behaveAvoidanceNot(),
+                                PromptsProvider.instance().behaveAvoidanceNeutral());
                 this.affiliation = new Actuator(
-                                DefaultPromptsProvider.instance().behaveAffiliation(),
-                                DefaultPromptsProvider.instance().behaveAffiliationNot(),
-                                DefaultPromptsProvider.instance().behaveAffiliationNeutral());
+                                PromptsProvider.instance().behaveAffiliation(),
+                                PromptsProvider.instance().behaveAffiliationNot(),
+                                PromptsProvider.instance().behaveAffiliationNeutral());
         }
 
         @Override
