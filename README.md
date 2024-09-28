@@ -8,6 +8,8 @@ This fork extends the original framework with the means to use language models f
     - [Example Interaction](#example-interaction)
 - [Behaviour Regulation with Big Five Personality Traits](#behaviour-regulation-with-big-five-personality-traits)
     - [Example Interaction](#example-interaction-1)
+- [ADHS Coaching](#behaviour-regulation-for-adhs-coaching)
+    - [Example Interaction](#example-interaction-2)
 - [Prototyping](#prototyping)
     - [Testing](#testing)
     - [Detections](#detections)
