@@ -30,6 +30,7 @@ public class LMOpenAI {
     private static final String REMINDER_DECISION = "Remember to respond with either true or false only so that it can be parsed with the Java programming language. Your respopnse needs to work with the Boolean.parseBoolean() method, which only accepts English true or false.";
     private static final String REMINDER_EXTRACTION = "Remember to respond with the extracted value in JSON format only so that it can be parsed with a Java program using the GSON library. If the value extracted is of type string, ensure it is enclosed in double quotes.";
     private static final String REMINDER_DETECTION = "Based on the above guidelines, your response should be one of the numbers -1, 0, or 1 so that it can be parsed with the Java programming language. Your response needs to work with the Integer.parseInt() method, which only acepts integer numbers.";
+    private static final String REMINDER_SUMMARISATION = "Remember to reply with the summary in JSON format only so that it can be parsed with a Java program using the GSON library.";
 
     public static String complete(Utterances utterances, String systemPrepend) {
         List<Utterance> totalPrompt = LMOpenAI.composePrompt(utterances, systemPrepend);
@@ -70,12 +71,25 @@ public class LMOpenAI {
         return result;
     }
 
-    public static String summarise(Utterances utterances, String systemPrepend) {
+    public static JsonElement summarise(Utterances utterances, String systemPrepend) {
         if (utterances.isEmpty()) {
             throw new RuntimeException("cannot summarise from empty utterance");
         }
-        List<Utterance> totalPrompt = LMOpenAI.composePromptCondensed(utterances, systemPrepend);
+        List<Utterance> totalPrompt = LMOpenAI.composePromptCondensed(utterances, systemPrepend,
+                LMOpenAI.REMINDER_SUMMARISATION);
         LMOpenAI.LOGGER.info("LMOpenAI.summarise() with " + totalPrompt);
+        String response = LMOpenAI.openai(totalPrompt, 0.0f, 0.0f);
+        Gson gson = new Gson();
+        JsonElement result = gson.fromJson(response, JsonElement.class);
+        return result;
+    }
+
+    public static String summariseOffline(Utterances utterances, String systemPrepend) {
+        if (utterances.isEmpty()) {
+            throw new RuntimeException("cannot summarise offline from empty utterance");
+        }
+        List<Utterance> totalPrompt = LMOpenAI.composePromptCondensed(utterances, systemPrepend);
+        LMOpenAI.LOGGER.info("LMOpenAI.summariseOffline() with " + totalPrompt);
         String result = LMOpenAI.openai(totalPrompt, 0.0f, 0.0f);
         return result;
     }

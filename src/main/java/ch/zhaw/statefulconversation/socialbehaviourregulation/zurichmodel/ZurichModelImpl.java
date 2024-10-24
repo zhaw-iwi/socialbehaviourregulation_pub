@@ -82,6 +82,18 @@ public class ZurichModelImpl extends RegulationSystem {
                                 PromptsProvider.instance().behaveAffiliationNeutral());
         }
 
+        public Tank getDependency() {
+                return this.dependency;
+        }
+
+        public Tank getEnterprise() {
+                return this.enterprise;
+        }
+
+        public Tank getAutonomy() {
+                return this.autonomy;
+        }
+
         @Override
         public String process(Utterances utterances) {
                 // 1 Detect
