@@ -78,11 +78,6 @@ public class DefaultPromptsProvider extends PromptsProvider {
     }
 
     @Override
-    public String behaviourApply() {
-        return "Adjust your conversational tone by combining the following behaviors to influence the user's experience: ";
-    }
-
-    @Override
     public String behaveAggression() {
         return "Adopt a demanding or assertive tone, with a sense of urgency or intensity in your responses. ";
     }
