@@ -1,23 +1,32 @@
 # Social Behaviour Regulation using Language Models
-*This is a fork of [PROMISE](https://github.com/zhaw-iwi/statefulconversation_java), an application development **framework** that supports the development of complex **language-based interactions** using **state machine modelling** concepts.*
+*This is a fork of [PROMISE](https://github.com/zhaw-iwi/promise), an application development **framework** that supports the development of complex **language-based interactions** using **state machine modelling** concepts.*
 
 This fork extends the original framework with the means to use language models for social behaviour regulation. This extension tailors the agent's behaviour to the user, making interactions more personalized and dynamic.
 
 ## Table of Contents
-- [Behaviour Regulation with the Zurich Model of Social Motivation](#behaviour-regulation-with-the-zurich-model-of-social-motivation)
-    - [Example Interaction](#example-interaction)
-- [Behaviour Regulation with Big Five Personality Traits](#behaviour-regulation-with-big-five-personality-traits)
-    - [Example Interaction](#example-interaction-1)
-- [Prototyping](#prototyping)
-    - [Testing](#testing)
-    - [Detections](#detections)
-    - [Behaviour Modulation](#behaviour-modulation)
-    - [Mapping from Detections to Behaviour Modulations](#mapping-from-detections-to-behaviour-modulations)
-- [Conclusion](#conclusion)
+- [0 Introduction](#0-introduction)
+- [1 Behaviour Regulation with the Zurich Model of Social Motivation](#1-behaviour-regulation-with-the-zurich-model-of-social-motivation)
+    - [1.1 Example Interaction](#11-example-interaction)
+- [2 Behaviour Regulation with Big Five Personality Traits](#2-behaviour-regulation-with-big-five-personality-traits)
+    - [2.1 Example Interaction](#21-example-interaction)
+- [3 ADHS Coaching](#3-behaviour-regulation-for-adhs-coaching)
+    - [3.1 Example Interaction](#31-example-interaction)
+- [4 Prototyping](#4-prototyping)
+    - [4.1 Deploy and Test Conversational Interactions](#41-deploy-and-test-conversational-interactions)
+    - [4.2 Create your own Conversational Interaction](#42-create-your-own-conversational-interaction)
+    - [4.3 Create your own Regulation Variation](#43-create-your-own-regulation-variation)
+        - [4.3.1 Detection](#431-detection)
+        - [4.3.2 Behaviour](#432-behaviour)
+        - [4.3.3 Mapping from Detection to Behaviour](#433-mapping-from-detection-to-behaviour)
+    - [4.3 Create your own Behaviour Regulation](#44-create-your-own-behaviour-regulation)
+- [5 Conclusion](#conclusion)
 
+## 0 Introduction
+Language models have become a key tool for the development of conversational AI that enables natural language interactions. However, creating complex conversational experiences where multiple phases of interaction smoothly transition into each other depending on the course of the conversation is a challenge. A single prompt statement often proves unreliable for implementing such dynamic behavior. To solve this problem, we introduced [PROMISE](https://github.com/zhaw-iwi/promise), a framework for dynamic prompt orchestration. PROMISE breaks down complex behaviors into smaller, more precise and reliable prompts that are dynamically selected and assembled to match the interaction flow.
 
+However, a further challenge arises when the system has to adapt several types of behaviors at the same time. For example, in a coaching scenario with the aim of improving health literacy and treatment adherence, the tone of voice needs to be adapted - whether through the use of different persuasion strategies, empathy or cognitive techniques. If the system is able to recognize characteristics of the user, e.g. as with Theory of Mind, it can dynamically adapt its social behavior and thus improve the effectiveness of the interaction. To address this challenge, we propose an extension of PROMISE for social behavior regulation that allows multiple types of behavioral variations to be dynamically and independently adapted, ensuring a more nuanced and effective conversational experience.
 
-## Behaviour Regulation with the Zurich Model of Social Motivation
+## 1 Behaviour Regulation with the Zurich Model of Social Motivation
 
 While we are experimenting with different approaches to behaviour regulation and therefore aim to support exchangeability, our first attempt was based on the [Zurich Model of Social Motivation](https://de.wikipedia.org/wiki/Z%C3%BCrcher_Modell_der_sozialen_Motivation) by [Norbert Bischoff](https://bischof.com/) as described in [Zeischrift für Psychologie, 1993](https://doi.org/10.5282/ubm/epub.2852) and shown in the following figure.
 
@@ -27,7 +36,7 @@ While we are experimenting with different approaches to behaviour regulation and
 
 The Zurich Model is a framework for understanding human motivation based on three core dimensions: dependency, enterprise, and autonomy.
 
-### Example Interaction
+### 1.1 Example Interaction
 
 The following figure shows a conversational interaction between a user and an assistant regulating its social behaviour. The user is simulated using GPT instructed to gaslight the assistant according to a gaslighting specification taken from [HackSpirit](https://hackspirit.com/gaslighting-in-relationships/).
 
@@ -45,7 +54,7 @@ For comparison, the following figure shows the same user interacting with a non-
  <img alt="Assistant regulating its social behaviour" src=".doc/NoRegulation.png">
 </picture>
 
-## Behaviour Regulation with Big Five Personality Traits
+## 2 Behaviour Regulation with Big Five Personality Traits
 
 As an alternative approach to social behaviour regulation, we implemented **BigFiveImpl** which detects the user personality traits according to [Big Five personality traits](https://en.wikipedia.org/wiki/Big_Five_personality_traits). The conversation with the user is continuously analysed for information about the following traits.
 - Openness to experience (inventive/curious vs. consistnt/cautious)
@@ -65,7 +74,7 @@ As a result, behaviour is computed as a function of the user's Big Five personal
 
 For example, if the user is high in openness (1) and extraversion (1), the product for exploration will be 1, prompting the agent to engage in exploratory conversation. Conversely, if the user is low in openness (-1) and high in neuroticism (1), the product for avoidance will be 1, meaning the agent will avoid unfamiliar topics.
 
-### Example Interaction
+### 2.1 Example Interaction
 
 We used GPT to act as a fictitious user that has the following Big Five personality traits:
 - Openness: -1 (Low, prefers familiar topics, dislikes novelty)
@@ -79,11 +88,58 @@ In the following figure, the traits detected and the resulting behavioural modul
  <img alt="Assistant regulating its social behaviour to comfort Big Five traits" src=".doc/BigFiveRegulation.png">
 </picture>
 
-## Prototyping
+## 3 Behaviour Regulation for ADHS Coaching
 
-*A complete introduction to the [PROMISE](https://github.com/zhaw-iwi/statefulconversation_java) framework including a guide on how to get framework applications up and running is required to understand and use this framework extension.*
+To explore novel applications, we implemented **CoachingImpl** which detects the user's issues and regulates its behaviour such as to coach the user. The conversation with the user is continuously analysed for information about the following issues.
+- Focus Level
+- Emotional Stability
+- Restlessness Level
+- Time Management
+- Social Interaction
 
-A **State** regulating its social behaviour according to the Zurich Model is created as follows.
+These detections are then mapped to the behaviours (aggression, supplication, exploration, avoidance and affiliation) of the Zurich Model described above as follows.
+- Empathetic Encouragement = (- Emotional Stability)
+- Grounding Mentoring = Focus Level x Restlessness
+- Productivity Reinforcement = Focus Level x Time Management
+- Reflection and Self-Regulation Faciliation = Emotional Stability x Time Management
+- Active Listening = (- Social Interaction)
+
+As a result, coaching behaviour is computed as a function of the user's issues. The result of these computations determines if and which coaching behaviours the agent performs.
+
+### 3.1 Example Interaction
+
+We used GPT to act as a fictitious user that has the following issues:
+- Focus Level: -1 (currently distracted and having difficulty focusing)
+- Emotional Stability: -1 (emotionally distressed, feeling frustrated with their current situation)
+- Restlessness Level: 1 (physically calm at the moment, not experiencing restlessness)
+- Time Management: -1 (struggling with time management, feeling behind on tasks)
+- Social Interaction: 0 (no recent social interactions mentioned or relevant)
+
+In the following figure, the issues detected and the resulting coaching behaviours are shown in the two columns on the right.
+<picture>
+ <img alt="ADHS coaching adapting the coaching behaviours to issues detected" src=".doc/ADHSCoaching.png">
+</picture>
+
+## 4 Prototyping
+
+*A complete introduction to the [PROMISE](https://github.com/zhaw-iwi/promise) framework including a guide on how to get framework applications up and running is required to understand and use this framework extension.*
+
+### 4.1 Deploy and Test Conversational Interactions
+
+Use the documentation of [PROMISE](https://github.com/zhaw-iwi/promise) to deploy existing conversational interactions. As part of this repository, you will find the following examples.
+- **ZurichModelAssistant** The basic behaviour regulated according to the Zurich Model.
+- **ZurichModelTheoryOfMind** The basic behaviour regulated according to the Zurich Model where the detections reflect the user motivations, and the behaviours aim to accommodate the user motivations.
+- **BigFiveRegulation** The basic behaviour regulated based on Big Five personality traits detections mapped to the Zurich Model behaviours set to comfort the specific user traits.
+- **ADHS Coaching** A coaching behaviour that is regulated based on user issues detected.
+- **BaselineUnregulated** A basic behaviour that is unregulated, reflecting the default language model behaviour.
+
+All of them share the exact same basic behaviour (state prompt and transition). All of them can be found at src/test/java/ch.zhaw.statefulconversation.bots.
+
+You may use ChatGPT to simulate a user with a specific conversational behaviour. Compare the resulting detections and behaviours between different user behaviours. Compare the regulated behaviour to the baseline interaction.
+
+### 4.2 Create your own Conversational Interaction
+
+Using the existing interaction implementations listed above as a template, create your own interaction. A **State** regulating its social behaviour according to detections created as follows.
 
 ```
 RegulationSystem regulationSystem = new ZurichModelImpl(0, 0, 0);
@@ -98,24 +154,18 @@ State state = new RegulatedState(
     List.of(transition)
 );
 ```
-where the **RegulationSystem** interface implementation **ZurichModelImpl** encapsulates all the functionality according to the Zurich Model.
+where the **RegulationSystem** interface implementations such as **ZurichModelImpl**, **BigFiveImpl** or **CoachingImpl** encapsulate all the regulation functionality (detection, mapping, behaviour).
 
 The behaviour regulation can be exchanged by adapting the first line of code above as exemplified with the following adaptation for the use of the Big Five regulation. 
 ```
 RegulationSystem regulationSystem = new BigFiveImpl();
 ```
 
-### Testing
+Once you created your own conversational interaction, deploy and test it as described above. 
 
-To test different approaches to behaviour regulation and obtain a comparison, use the following conversational agents implemented in test/java/ch.zhaw.statefulconversation.bots.
-- **BaselineUnregulated** A basic behaviour that is unregulated, reflecting the default language model behaviour.
-- **ZurichModelAssistant** The basic behaviour regulated according to the Zurich Model.
-- **ZurichModelTheoryOfMind** The basic behaviour regulated according to the Zurich Model where the detections reflect the user motivations, and the behaviours aim to accommodate the user motivations.
-- **BigFiveRegulation** The basic behaviour regulated based on Big Five personality traits detections mapped to the Zurich Model behaviours set to comfort the specific user traits.
+### 4.3 Create your own Regulation Variation
 
-All framework extensions related to social behaviour regulation are located in the package ch.zhaw.statefulconversation.socialbehaviourregulation.
-
-### Detections
+#### 4.3.1 Detection
 
 *In what follows, the detection mechanism is explained using the example of Big Five regulation. The conceptual mechanism is the same for all regulation approaches.* 
 
@@ -133,7 +183,7 @@ If an alternative **PromptsProvider** implementation is created and should be us
 PromptsProvider.instanciate([Name of your alternative provider class].class);
 ```
 
-### Behaviour Modulation
+#### 4.3.2 Behaviour
 
 *In what follows, the behaviour modulation mechanism is explained using the example of Big Five regulation. The conceptual mechanism is the same for all regulation approaches.* 
 
@@ -161,7 +211,7 @@ If an alternative **PromptsProvider** implementation is created and should be us
 PromptsProvider.instanciate([Name of your alternative provider class].class);
 ```
 
-### Mapping from Detections to Behaviour Modulations
+#### 4.3.3 Mapping from Detection to Behaviour
 
 *In what follows, the mapping mechanism is explained using the example of Big Five regulation. The conceptual mechanism is the same for all regulation approaches.* 
 
@@ -169,7 +219,19 @@ The mapping of personality traits detected to behaviour modulations is implement
 
 The default mapping may be adapted in the existing code of this method. If interchangeability is required, subclasses of **BigFiveImpl** may be created, where the **process(Utterances): String** methods are overriden.
 
-## Conclusion
+### 4.4 Create your own Behaviour Regulation
+
+Using the existing behaviour regulation implementations as a template, create your own behaviour regulation. All framework extensions related to social behaviour regulation are located at src/main/java/ch.zhaw.statefulconversation.socialbehaviourregulation.
+
+To create your own behaviour regulation, you will need to design and implement the following classes.
+- **YourRegulationImpl extends RegulationSystem** where the Detectors and Actuators are specified and initialised, and where the **process(Utterances): String** method specifies the detection and behaviour logics.
+- **PromptsProvider** where you specify all the prompts for detections and behaviours. Implement this as an abstract class if you want to experiment with different variants of these prompts.
+- **APromptsProvider**, **BPromptsProvider**, ... if you left the **PromptsProvider** abstract and want to have variants of prompts to experiment with.
+- **BehaviourImpl implements Behaviour** where the complete behaviour regulation prompt extension is assembled. Note that this is just for convenience and it is not an @Entity.
+
+Once you created these classes, create your own conversational interaction as described above.
+
+## 5 Conclusion
 This extension of the PROMISE framework introduces a flexible means of regulating social behavior in conversational interactions using language models. By leveraging psychological models such as the Zurich Model of Social Motivation and Big Five Personality Traits, interactions become more personalized, adaptive, and contextually aware. As conversational AI continues to evolve, these regulation systems offer pathways for more human-like and emotionally intelligent engagements, with potential for applications in digital therapy, coaching, education, or customer service. 
 
 We are currently using this to explore further refinements and additional behavioral models to add social skills to conversational interactions.
