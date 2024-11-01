@@ -141,7 +141,7 @@ You may use ChatGPT to simulate a user with a specific conversational behaviour.
 
 Using the existing interaction implementations listed above as a template, create your own interaction. A **State** regulating its social behaviour according to detections created as follows.
 
-```
+```java
 RegulationSystem regulationSystem = new ZurichModelImpl(0, 0, 0);
 
 // ...
@@ -157,7 +157,7 @@ State state = new RegulatedState(
 where the **RegulationSystem** interface implementations such as **ZurichModelImpl**, **BigFiveImpl** or **CoachingImpl** encapsulate all the regulation functionality (detection, mapping, behaviour).
 
 The behaviour regulation can be exchanged by adapting the first line of code above as exemplified with the following adaptation for the use of the Big Five regulation. 
-```
+```java
 RegulationSystem regulationSystem = new BigFiveImpl();
 ```
 
@@ -179,7 +179,7 @@ The detections of personality traits are implemented as requests to the language
 - detectNeuroticism(): String
 
 If an alternative **PromptsProvider** implementation is created and should be used, the following line of code can be added as a new first line of code in the **setUp()** method of the unit test (e.g., in **BigFiveRegulation** in src/test/java/ch.zhaw.statefulconveration.bots).
-```
+```java
 PromptsProvider.instanciate([Name of your alternative provider class].class);
 ```
 
@@ -207,7 +207,7 @@ The behaviors chosen based on the detected personality traits are extensions to 
 - behaveAffiliationNeutral(): String
 
 If an alternative **PromptsProvider** implementation is created and should be used, the following line of code can be added as a new first line of code in the **setUp()** method of the unit test (e.g., in **BigFiveRegulation** in src/test/java/ch.zhaw.statefulconveration.bots).
-```
+```java
 PromptsProvider.instanciate([Name of your alternative provider class].class);
 ```
 
